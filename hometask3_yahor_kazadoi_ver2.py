@@ -27,6 +27,10 @@ homEwork:
 # correct the mistakes with "IZ" with re.sub, the word should start with whitespace and finish after z (word border /b)
 text_variable = re.sub(r'\siz\b', ' is', text_variable, 0, re.IGNORECASE)
 
+# find and index where we need to insert one more sentence
+place_to_insert = 'it to the END OF this Paragraph.'
+index_to_insert = text_variable.find(place_to_insert)+len(place_to_insert)
+
 # to apply correct case I would prefer to split the string to the list
 string_list = list(text_variable)
 
@@ -63,7 +67,7 @@ for word in new_string.split():
 last_sentence_string = ' '.join(last_sentence).capitalize()+'.'
 
 # final string is concatenating of previous result and the last sentence
-new_string_final = f"{new_string} \n {last_sentence_string}"
+new_string_final = f"{new_string[:index_to_insert]} {last_sentence_string} {new_string[index_to_insert:]}"
 
 # print the results
 print(new_string_final)
