@@ -66,7 +66,8 @@ for word in new_string.split():
         last_sentence.append(word[:-1])
 last_sentence_string = ' '.join(last_sentence).capitalize()+'.'
 
-# final string is concatenating of previous result and the last sentence
+# to get the final string we need to insert our last sentence in the correct place
+# we can use this structure [:] to split the first string in the correct place
 new_string_final = f"{new_string[:index_to_insert]} {last_sentence_string} {new_string[index_to_insert:]}"
 
 # print the results
