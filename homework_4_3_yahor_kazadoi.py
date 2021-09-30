@@ -68,7 +68,7 @@ def creating_sentence_from_last_words(some_string):
 # function for inserting string inside another text,
 # and with the parameter after which we need to insert it, with default parameter
 def inserting_sentence_where_needed(text, string_to_insert, place_to_insert='it to the end of this paragraph.'):
-    index_to_insert = text_variable.find(place_to_insert) + len(place_to_insert)
+    index_to_insert = text.find(place_to_insert) + len(place_to_insert)
     result_string = f"{text[:index_to_insert]} {string_to_insert} {text[index_to_insert:]}"
     return result_string
 
