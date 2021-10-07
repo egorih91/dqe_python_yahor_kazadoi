@@ -73,22 +73,23 @@ def inserting_sentence_where_needed(text, string_to_insert, place_to_insert='it 
     return result_string
 
 
-# fixing the mistakes with "IZ"
-text_variable = fix_iz_mistake(text_variable)
+if __name__ == '__main__':
+    # fixing the mistakes with "IZ"
+    text_variable = fix_iz_mistake(text_variable)
 
-# modifying case
-nice_string = case_modifying(text_variable)
+    # modifying case
+    nice_string = case_modifying(text_variable)
 
-# count whitespaces (I thinks it is not needed to create a function for one row)
-whitespaces_counter = len(re.findall(r'\s', nice_string))
+    # count whitespaces (I thinks it is not needed to create a function for one row)
+    whitespaces_counter = len(re.findall(r'\s', nice_string))
 
-# creating needed sentence
-last_word_sentence = creating_sentence_from_last_words(nice_string)
+    # creating needed sentence
+    last_word_sentence = creating_sentence_from_last_words(nice_string)
 
-# adding last_word_sentence, to the nice_string, place where to insert is used as default value
-new_string_final = inserting_sentence_where_needed(nice_string, last_word_sentence)
+    # adding last_word_sentence, to the nice_string, place where to insert is used as default value
+    new_string_final = inserting_sentence_where_needed(nice_string, last_word_sentence)
 
-# print the results
-print(new_string_final)
-print(whitespaces_counter)
+    # print the results
+    print(new_string_final)
+    print(whitespaces_counter)
 
