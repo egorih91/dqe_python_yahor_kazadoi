@@ -42,7 +42,7 @@ def case_modifying(some_string):
     for symbol_number in range(0, len(string_list)):
         current_letter = string_list[symbol_number]
 
-        if current_letter in string.ascii_letters and previous_symbol in [':', '.']:
+        if current_letter in string.ascii_letters and previous_symbol in [':', '.', '!', '?']:
             string_list[symbol_number] = current_letter.upper()
         elif current_letter in string.ascii_letters:
             string_list[symbol_number] = current_letter.lower()
@@ -52,6 +52,7 @@ def case_modifying(some_string):
 
     # then get back from the list to the sting using join method
     beautiful_string = "".join(str(x) for x in string_list)
+    beautiful_string = re.sub(r'\si\b', ' I', beautiful_string, 0)
     return beautiful_string
 
 
