@@ -1,6 +1,4 @@
-# 2.Default folder or user provided file path
-#
-
+# needed imports
 import re
 import datetime
 import os
@@ -130,6 +128,7 @@ class SportResult(Publication):
             return 3
 
 
+# child class for publications from txt files
 class FillingFromText(Publication):
     def __init__(self):
         super().__init__()
