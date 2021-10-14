@@ -3,8 +3,9 @@ import re
 import datetime
 import os
 import sys
-# import function for modifying case from previous homework
+# import functions from previous homeworks
 from files_for_use.homework_4_3_yahor_kazadoi import case_modifying
+from files_for_use.class_for_csv_tasks import WorkingWithResults
 
 
 # parent class
@@ -36,7 +37,7 @@ class Publication:
     def print_result(self):
         if len(self.result_list) == 0:
             print('No new files for publication')
-        elif isinstance(self.result_list[0], str):  # if our result_list contains only strings we insert them to the final file
+        elif isinstance(self.result_list[0], str):  # if our list contains only strings we insert them to the final file
             self.insert_strings_into_file(self.result_list)
         else:  # otherwise we going through lists in the result_list
             for result in self.result_list:
@@ -161,9 +162,14 @@ class FillingFromText(Publication):
                 os.remove(file_path)
 
 
+
+
+
+
+
 if __name__ == '__main__':
     type_of_publication = input("""
-Print the category number of the publication 
+Print the category number of the publication
 1 - news
 2 - private ad
 3 - sport result
@@ -181,6 +187,27 @@ Print the category number of the publication
         raise ValueError("We don't have information about this category of the publication")
 
     new_publication.fulfil_the_content()
-    new_publication.print_result()
+    results = new_publication.print_result()
+
+    if results != 0:  # check if some rows were added to the result file
+        result_work = WorkingWithResults()  # create object for working with the results
+        result_work.get_list_of_words_from_txt_file()  # get list of words from the text
+
+        result_work.count_words_in_lower_case()  # count words
+        result_work.count_letters_in_the_text()  # count letters
+
+        result_work.write_count_of_words_result_to_csv()  # write result of words counting
+        result_work.write_count_of_letters_with_headers()  # write result of letters counting
+    else:
+        print('Content of files with publications were not updated')
+
+
+
+
+
+
+
+
+
 
 

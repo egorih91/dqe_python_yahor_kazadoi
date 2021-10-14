@@ -1,66 +1,106 @@
-Private Ad******************
-I want to sell a phone
-Actual until: 2021-12-27, 88 days left
-**********************
+Text Information *************
+Something to print,
+And one more row.
+And just some word to have the third row
+******************************
 
 
-Sport Result******************
-Basketball
-CLE:LAL, result 88-96
-LAL is WINNER! Congrats!
-**********************
+Text Information *************
+I have something to think about.
+Probably, I need to write an article about ot
+******************************
 
 
-Private Ad******************
-I want to bye a car
-It is not actual already, it was actual until: 2020-01-01
-**********************
+News *************************
+Nothing special
+Gomel
+2021-10-11 11:53
+******************************
 
 
-News******************
-The government house is on fire
+Text Information *************
+Something to print,
+And one more row.
+And just some word to have the third row
+******************************
+
+
+Text Information *************
+I have something to think about.
+Probably, I need to write an article about ot
+******************************
+
+
+Text Information *************
+Something to print,
+And one more row.
+And just some word to have the third row
+******************************
+
+
+Text Information *************
+I have something to think about.
+Probably, I need to write an article about ot
+******************************
+
+
+Private Ad *******************
+Need to sell some stuff
+Actual until: 2021-12-01, 49 days left
+******************************
+
+
+Text Information *************
+Something to print,
+And one more row.
+And just some word to have the third row
+******************************
+
+
+Text Information *************
+I have something to think about.
+Probably, I need to write an article about ot
+******************************
+
+
+Text Information *************
+Something to print,
+And one more row.
+And just some word to have the third row
+******************************
+
+
+News *************************
+Wow, it was incredible
+Miami
+2021-10-14 12:12
+******************************
+
+
+Private Ad *******************
+Sale
+Actual until: 2021-12-10, 57 days left
+******************************
+
+
+News *************************
+Smth
 Minsk
-2021-09-30 17:59
-**********************
-
-
-News *************************
-I feel sick
-Brest
-2021-09-30 18:06
-******************************
-
-
-Private Ad *******************
-I want to rent a room
-Actual until: 2021-11-07, 38 days left
-******************************
-
-
-Sport Result *****************
-Football
-Chelsea:Juventus, result 0-1
-Juventus is WINNER! Congrats!
-******************************
-
-
-Sport Result *****************
-Football
-Chelsea:Liverpool, result 2-1
-Chelsea is WINNER! Congrats!
+2021-10-14 12:21
 ******************************
 
 
 News *************************
-Traffic jam in the center
-Brest
-2021-10-05 14:58
+Some mews
+New york
+2021-10-14 12:23
 ******************************
 
 
-Private Ad *******************
-I want to sell an elephant
-Actual until: 2022-07-17, 285 days left
+News *************************
+Wow
+London
+2021-10-14 12:24
 ******************************
 
 
