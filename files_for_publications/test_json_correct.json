@@ -1,0 +1,1 @@
+{"1": {"publication_type": "news", "text": "json news to test", "city": "mosCow"}, "2": {"publication_type": "ad", "text": "I want to buy a car", "date": "2021-12-01"}, "3": {"publication_type": "sport_result", "game_result": "88-96", "kind_of_sport": "Basketball", "participant1": "Cleveland", "participant2": "laKers"}}
