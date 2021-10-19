@@ -228,9 +228,6 @@ class JsonPublication(News, PrivateAd, SportResult):
 
         path_for_searching_files = self.creating_path_to_file()
 
-        # directory_local = os.getcwd()
-        # full_path_local = os.path.join(directory_local, 'files_for_publications', 'test_json.json')
-
         # going through the directory and searching for the json files
         for one_file in os.listdir(path_for_searching_files):
             if one_file.endswith('.json'):
