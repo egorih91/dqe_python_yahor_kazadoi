@@ -6,6 +6,7 @@ import sys
 import json
 # import functions from previous homeworks
 from files_for_use.homework_4_3_yahor_kazadoi import case_modifying
+import xml.etree.ElementTree as ET
 
 
 # parent class
@@ -220,6 +221,38 @@ class JsonPublication(News, PrivateAd, SportResult):
     def adding_to_list_sport(self):
         SportResult.adding_to_list(self)
 
+    def adding_data_from_dictionary(self, dictionary):
+        delete_flag = 1
+        try:
+            for key, value in dictionary.items():
+                if value['publication_type'] == 'news':
+                    self.publication_type = 'News'
+                    self.text = value['text']
+                    self.city = value['city']
+                    self.adding_to_list_news()
+                    self.number_of_publications += 1
+                elif value['publication_type'] == 'ad':
+                    self.publication_type = 'Private ad'
+                    self.text = value['text']
+                    self.expiration_date_str = value['date']
+                    self.adding_to_list_ad()
+                    self.number_of_publications += 1
+                elif value['publication_type'] == 'sport_result':
+                    self.publication_type = 'sport result'
+                    self.game_result = value['game_result']
+                    self.kind_of_sport = value['kind_of_sport']
+                    self.participant1 = value['participant1']
+                    self.participant2 = value['participant2']
+                    self.adding_to_list_sport()
+                    self.number_of_publications += 1
+                else:
+                    delete_flag = 0
+        except KeyError:
+            delete_flag = 0
+        except ValueError:
+            delete_flag = 0
+        return delete_flag
+
     # override the method fulfil_the_content for json files
     def fulfil_the_content(self):
         # create local variable for the list with all the results
@@ -243,38 +276,80 @@ class JsonPublication(News, PrivateAd, SportResult):
                 with open(file_path, 'r') as f:
                     json_data = json.loads(f.read())
 
-                # if something goes wrong try helps us to avoid the crash of the program
-                try:
-                    for key, value in json_data.items():
-                        if value['publication_type'] == 'news':
-                            self.publication_type = 'News'
-                            self.text = value['text']
-                            self.city = value['city']
-                            self.adding_to_list_news()
-                            self.number_of_publications += 1
-                        elif value['publication_type'] == 'ad':
-                            self.publication_type = 'Private ad'
-                            self.text = value['text']
-                            self.expiration_date_str = value['date']
-                            self.adding_to_list_ad()
-                            self.number_of_publications += 1
-                        elif value['publication_type'] == 'sport_result':
-                            self.publication_type = 'sport result'
-                            self.game_result = value['game_result']
-                            self.kind_of_sport = value['kind_of_sport']
-                            self.participant1 = value['participant1']
-                            self.participant2 = value['participant2']
-                            self.adding_to_list_sport()
-                            self.number_of_publications += 1
-                        else:
-                            delete_flag = 0
-                except KeyError:
-                    delete_flag = 0
-                except ValueError:
-                    delete_flag = 0
+                delete_flag = self.adding_data_from_dictionary(self, json_data)
 
                 # if the delete_flag was not overwritten we can remove the file and add the results to the local
                 # variable full_result
+                if delete_flag == 1:
+                    for included_list in self.result_list:
+                        full_result.append(included_list)
+                    os.remove(file_path)
+                else:  # otherwise this file shouldn't be removed and
+                    # the results from this file should not be added to the final result file
+                    print(f"File {one_file} has incorrect structure, data from the file were not added to the result "
+                          f"file")
+
+        # after all the files will be checked redefine self.result_list variable from local variable full_result
+        self.result_list = full_result
+
+
+class XmlPublication(JsonPublication):
+    def __init__(self):
+        super(XmlPublication, self).__init__()
+
+    def adding_data_from_xml(self, xml_data):
+        delete_flag = 1
+        for publication in xml_data:
+
+            try:
+                # the same logic as in json going through all the elements
+                if publication.attrib['type'] == 'news':  # 'ad' 'sport'
+                    self.result_list
+                    self.publication_type = 'News'
+                    self.text = publication.find('text').text
+                    self.city = publication.find('city').text
+                    self.adding_to_list_news()
+                    self.number_of_publications += 1
+                elif publication.attrib['type'] == 'ad':
+                    self.publication_type = 'Private ad'
+                    self.text = publication.find('text').text
+                    self.expiration_date_str = publication.find('date').text
+                    self.adding_to_list_ad()
+                    self.number_of_publications += 1
+                elif publication.attrib['type'] == 'sport':
+                    self.publication_type = 'sport result'
+                    self.game_result = publication.find('game_result').text
+                    self.kind_of_sport = publication.find('kind_of_sport').text
+                    self.participant1 = publication.find('participant1').text
+                    self.participant2 = publication.find('participant2').text
+                    self.adding_to_list_sport()
+                    self.number_of_publications += 1
+                else:
+                    delete_flag = 0
+            except ET.ParseError:
+                delete_flag = 0
+
+        return delete_flag
+
+    def fulfil_the_content(self):
+        full_result = []
+
+        path_for_searching_files = self.creating_path_to_file()
+
+        # going through the directory and searching for the json files
+        for one_file in os.listdir(path_for_searching_files):
+            if one_file.endswith('.xml'):
+                path_for_searching_files.split()[0]
+                file_path = os.path.join(path_for_searching_files, one_file)
+                # try-except block to avoid mistake with the wrong structure
+                try:
+                    tree = ET.parse(file_path)
+                    root = tree.getroot()
+                except ET.ParseError:
+                    delete_flag = 0
+                else:
+                    delete_flag = self.adding_data_from_xml(root)
+
                 if delete_flag == 1:
                     for included_list in self.result_list:
                         full_result.append(included_list)

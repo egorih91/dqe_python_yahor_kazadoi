@@ -1,0 +1,18 @@
+<publications>
+	<pub1 type='news'>
+		<text>It is an XML news</text>
+		<city> Somecity</city>
+	</pub1>
+	<pub2 type='ad'>
+		<text> It is an XML AD</text>
+		<date>2021-12-22</date>
+	</pub2>
+	
+	<pub2 type='sport22'>
+		<game_result>35-30</game_result>
+		<kind_of_sport>Handball</kind_of_sport>
+		<participant1>BGK im. Meshkova</participant1>
+		<participant2>Lille</participant2>
+	</pub2>
+
+</publications>
