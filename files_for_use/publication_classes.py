@@ -276,7 +276,7 @@ class JsonPublication(News, PrivateAd, SportResult):
                 with open(file_path, 'r') as f:
                     json_data = json.loads(f.read())
 
-                delete_flag = self.adding_data_from_dictionary(self, json_data)
+                delete_flag = self.adding_data_from_dictionary(json_data)
 
                 # if the delete_flag was not overwritten we can remove the file and add the results to the local
                 # variable full_result

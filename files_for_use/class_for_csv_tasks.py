@@ -16,8 +16,14 @@ class WorkingWithResults:
     def get_list_of_words_from_txt_file(self, directory=None):
         if not directory:  # if directory was not given then use current directory
             directory = os.getcwd()
+            # and then create full path to the file with results
+            path_full = os.path.join(directory, 'files_with_results', self.file_name)
+        else:
+            # if the directory was given we use it plus file_name
+            path_full = os.path.join(directory, self.file_name)
 
-        path_full = os.path.join(directory, self.file_name)  # create full path to the file with results
+
+
 
         if not os.path.isfile(path_full):  # check if the file exists
             raise FileNotFoundError(f"You want to update file that does not exist. Path {path_full} is incorrect")
@@ -29,6 +35,12 @@ class WorkingWithResults:
         for line in all_lines:  # exclude rows with the topic of publication and last rows of publications with * only
             if '*' not in line:
                 string_full = string_full + line
+
+        replacement_list = ['It is not actual already, it was actual until:', 'Actual until:', 'is winner! Congrats!',
+                            'No winner revealed, draw']
+
+        for strings in replacement_list:
+            string_full = string_full.replace(strings, '')
 
         words = string_full.split()  # split the string into words
 
