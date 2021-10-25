@@ -22,9 +22,6 @@ class WorkingWithResults:
             # if the directory was given we use it plus file_name
             path_full = os.path.join(directory, self.file_name)
 
-
-
-
         if not os.path.isfile(path_full):  # check if the file exists
             raise FileNotFoundError(f"You want to update file that does not exist. Path {path_full} is incorrect")
 
@@ -47,7 +44,8 @@ class WorkingWithResults:
         for word in words:
             if not re.match(r'\d', word):  # looking through the words without numbers
                 clear_word = re.sub(r"[^\w\s]", "", word)  # saving only letters without punctuation marks
-                self.list_of_words.append(clear_word)  # create list of words
+                if len(clear_word) != 0:
+                    self.list_of_words.append(clear_word)  # create list of words
 
         return self.list_of_words
 

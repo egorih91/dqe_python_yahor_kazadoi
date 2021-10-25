@@ -18,6 +18,11 @@ class Publication:
         self.number_of_publications = 0
         self.folder_for_files_with_publications = 'files_for_publications'
         self.path_to_file_with_result = os.path.join(os.getcwd(), 'files_with_results', 'result_file.txt')
+        self.files_that_loaded_successfully = []
+
+    def printing_successfully_loaded_files(self):
+        if len(self.files_that_loaded_successfully)>0:
+            print("Next files were loaded successfully: ", ', '.join(self.files_that_loaded_successfully))
 
     # a method for checking if additional arguments come to us and we need to use them as path, or not
     def creating_path_to_file(self):
@@ -52,6 +57,21 @@ class Publication:
         text = input(f"What is the text of the {self.publication_type}? \n")
         return text
 
+    # method for checking if the file was successfully parsed
+    def checking_delete_flag(self, delete_flag, file_path, one_file, full_result):
+        if delete_flag == 1:
+            for included_list in self.result_list:
+                full_result.append(included_list)
+            os.remove(file_path)
+            print(f"Data from file {one_file} was successfully loaded to the result file, "
+                  f"and {one_file} was removed")
+            self.files_that_loaded_successfully.append(one_file)
+        else:  # otherwise this file shouldn't be removed and
+            # the results from this file should not be added to the final result file
+            print(f"File {one_file} has incorrect structure, data from the file were not added to the result "
+                  f"file")
+        return full_result
+
     # method that is common for all the child classes
     # all that we need to have a list with the same structure (list with strings inside)
     def insert_strings_into_file(self, list_with_strings):
@@ -61,6 +81,7 @@ class Publication:
             file.write(f"{''.ljust(30, '*')}\n\n\n")
 
     def print_result(self):
+        self.printing_successfully_loaded_files()
         if len(self.result_list) == 0:
             print('No new files for publication')
         else:  # otherwise we going through lists in the result_list
@@ -202,7 +223,10 @@ class FillingFromText(Publication):
                     for line in f:
                         self.result_list[counter].append(line.replace('\n', ''))
                 counter += 1
+                print(f"Data from file {one_file} was successfully loaded to the result file, "
+                      f"and {one_file} was removed")
                 os.remove(file_path)
+                self.files_that_loaded_successfully.append(one_file)
 
 
 # it was decided to create class with multiple inheritance
@@ -279,15 +303,7 @@ class JsonPublication(News, PrivateAd, SportResult):
                 delete_flag = self.adding_data_from_dictionary(json_data)
 
                 # if the delete_flag was not overwritten we can remove the file and add the results to the local
-                # variable full_result
-                if delete_flag == 1:
-                    for included_list in self.result_list:
-                        full_result.append(included_list)
-                    os.remove(file_path)
-                else:  # otherwise this file shouldn't be removed and
-                    # the results from this file should not be added to the final result file
-                    print(f"File {one_file} has incorrect structure, data from the file were not added to the result "
-                          f"file")
+                full_result = self.checking_delete_flag(delete_flag, file_path, one_file, full_result)
 
         # after all the files will be checked redefine self.result_list variable from local variable full_result
         self.result_list = full_result
@@ -350,14 +366,7 @@ class XmlPublication(JsonPublication):
                 else:
                     delete_flag = self.adding_data_from_xml(root)
 
-                if delete_flag == 1:
-                    for included_list in self.result_list:
-                        full_result.append(included_list)
-                    os.remove(file_path)
-                else:  # otherwise this file shouldn't be removed and
-                    # the results from this file should not be added to the final result file
-                    print(f"File {one_file} has incorrect structure, data from the file were not added to the result "
-                          f"file")
+                full_result = self.checking_delete_flag(delete_flag, file_path, one_file, full_result)
 
         # after all the files will be checked redefine self.result_list variable from local variable full_result
         self.result_list = full_result
