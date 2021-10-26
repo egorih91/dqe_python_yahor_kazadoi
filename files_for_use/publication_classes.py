@@ -25,7 +25,9 @@ class Publication:
     def printing_successfully_loaded_files(self):
         if len(self.files_that_loaded_successfully)>0:
             print("Next files were loaded successfully: ", ', '.join(self.files_that_loaded_successfully))
+        if len(self.empty_files) > 0:
             print("Next files were empty: ", ', '.join(self.empty_files))
+        if len(self.files_with_incorrect_structure) > 0:
             print("Next files were not loaded due to incorrect structure: ",
                   ', '.join(self.files_with_incorrect_structure))
 
