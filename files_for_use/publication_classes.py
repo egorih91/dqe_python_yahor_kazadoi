@@ -321,35 +321,37 @@ class XmlPublication(JsonPublication):
 
     def adding_data_from_xml(self, xml_data):
         delete_flag = 1
-        for publication in xml_data:
+        x = len(xml_data)
+        if len(xml_data) > 0:
 
-            try:
-                # the same logic as in json going through all the elements
-                if publication.attrib['type'] == 'news':  # 'ad' 'sport'
-                    self.result_list
-                    self.publication_type = 'News'
-                    self.text = publication.find('text').text
-                    self.city = publication.find('city').text
-                    self.adding_to_list_news()
-                    self.number_of_publications += 1
-                elif publication.attrib['type'] == 'ad':
-                    self.publication_type = 'Private ad'
-                    self.text = publication.find('text').text
-                    self.expiration_date_str = publication.find('date').text
-                    self.adding_to_list_ad()
-                    self.number_of_publications += 1
-                elif publication.attrib['type'] == 'sport':
-                    self.publication_type = 'sport result'
-                    self.game_result = publication.find('game_result').text
-                    self.kind_of_sport = publication.find('kind_of_sport').text
-                    self.participant1 = publication.find('participant1').text
-                    self.participant2 = publication.find('participant2').text
-                    self.adding_to_list_sport()
-                    self.number_of_publications += 1
-                else:
+            for publication in xml_data:
+                try:
+                    # the same logic as in json going through all the elements
+                    if publication.attrib['type'] == 'news':  # 'ad' 'sport'
+                        self.result_list
+                        self.publication_type = 'News'
+                        self.text = publication.find('text').text
+                        self.city = publication.find('city').text
+                        self.adding_to_list_news()
+                        self.number_of_publications += 1
+                    elif publication.attrib['type'] == 'ad':
+                        self.publication_type = 'Private ad'
+                        self.text = publication.find('text').text
+                        self.expiration_date_str = publication.find('date').text
+                        self.adding_to_list_ad()
+                        self.number_of_publications += 1
+                    elif publication.attrib['type'] == 'sport':
+                        self.publication_type = 'sport result'
+                        self.game_result = publication.find('game_result').text
+                        self.kind_of_sport = publication.find('kind_of_sport').text
+                        self.participant1 = publication.find('participant1').text
+                        self.participant2 = publication.find('participant2').text
+                        self.adding_to_list_sport()
+                        self.number_of_publications += 1
+                    else:
+                        delete_flag = 0
+                except ET.ParseError:
                     delete_flag = 0
-            except ET.ParseError:
-                delete_flag = 0
 
         return delete_flag
 
@@ -361,6 +363,8 @@ class XmlPublication(JsonPublication):
         # going through the directory and searching for the json files
         for one_file in os.listdir(path_for_searching_files):
             if one_file.endswith('.xml'):
+                self.result_list = []
+                self.number_of_publications = 0
                 path_for_searching_files.split()[0]
                 file_path = os.path.join(path_for_searching_files, one_file)
                 # try-except block to avoid mistake with the wrong structure
