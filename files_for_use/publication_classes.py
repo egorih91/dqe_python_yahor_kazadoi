@@ -19,10 +19,15 @@ class Publication:
         self.folder_for_files_with_publications = 'files_for_publications'
         self.path_to_file_with_result = os.path.join(os.getcwd(), 'files_with_results', 'result_file.txt')
         self.files_that_loaded_successfully = []
+        self.empty_files = []
+        self.files_with_incorrect_structure = []
 
     def printing_successfully_loaded_files(self):
         if len(self.files_that_loaded_successfully)>0:
             print("Next files were loaded successfully: ", ', '.join(self.files_that_loaded_successfully))
+            print("Next files were empty: ", ', '.join(self.empty_files))
+            print("Next files were not loaded due to incorrect structure: ",
+                  ', '.join(self.files_with_incorrect_structure))
 
     # a method for checking if additional arguments come to us and we need to use them as path, or not
     def creating_path_to_file(self):
@@ -63,13 +68,14 @@ class Publication:
             for included_list in self.result_list:
                 full_result.append(included_list)
             os.remove(file_path)
-            print(f"Data from file {one_file} was successfully loaded to the result file, "
-                  f"and {one_file} was removed")
-            self.files_that_loaded_successfully.append(one_file)
+            if len(self.result_list) == 0:
+                self.empty_files.append(one_file)
+            else:
+                self.files_that_loaded_successfully.append(one_file)
         else:  # otherwise this file shouldn't be removed and
             # the results from this file should not be added to the final result file
-            print(f"File {one_file} has incorrect structure, data from the file were not added to the result "
-                  f"file")
+            self.files_with_incorrect_structure.append(one_file)
+
         return full_result
 
     # method that is common for all the child classes

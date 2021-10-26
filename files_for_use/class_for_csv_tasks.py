@@ -34,7 +34,7 @@ class WorkingWithResults:
                 string_full = string_full + line
 
         replacement_list = ['It is not actual already, it was actual until:', 'Actual until:', 'is winner! Congrats!',
-                            'No winner revealed, draw']
+                            'No winner revealed, draw', ' days left']
 
         for strings in replacement_list:
             string_full = string_full.replace(strings, '')
