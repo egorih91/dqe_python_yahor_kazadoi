@@ -1,6 +1,7 @@
 from files_for_use.class_for_csv_tasks import WorkingWithResults
 from files_for_use.publication_classes import News, PrivateAd, SportResult, FillingFromText, JsonPublication, \
     XmlPublication
+from files_for_use.working_with_db_class import WorkingWithDb
 
 if __name__ == '__main__':
     type_of_publication = input("""
@@ -31,6 +32,10 @@ Print the category number of the publication
     results_len, result_list_for_db = new_publication.print_result()
 
     if results_len != 0:  # check if some rows were added to the result file
+        # adding data to db using the class that was imported
+        adding_to_db = WorkingWithDb(result_list_for_db)
+        adding_to_db.adding_data_to_db()
+
         result_work = WorkingWithResults()  # create object for working with the results
         result_work.get_list_of_words_from_txt_file()  # get list of words from the text
 

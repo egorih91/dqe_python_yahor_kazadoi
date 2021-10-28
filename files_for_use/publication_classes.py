@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 class Publication:
     def __init__(self):
         self.result_list = []
+        self.result_list_for_db = []
         self.publication_type = ""
         self.number_of_publications = 0
         self.folder_for_files_with_publications = 'files_for_publications'
@@ -65,10 +66,12 @@ class Publication:
         return text
 
     # method for checking if the file was successfully parsed
-    def checking_delete_flag(self, delete_flag, file_path, one_file, full_result):
+    def checking_delete_flag(self, delete_flag, file_path, one_file, full_result, full_result_db):
         if delete_flag == 1:
             for included_list in self.result_list:
                 full_result.append(included_list)
+            for included_list in self.result_list_for_db:
+                full_result_db.append(included_list)
             os.remove(file_path)
             if len(self.result_list) == 0:
                 self.empty_files.append(one_file)
@@ -78,7 +81,7 @@ class Publication:
             # the results from this file should not be added to the final result file
             self.files_with_incorrect_structure.append(one_file)
 
-        return full_result
+        return full_result, full_result_db
 
     # method that is common for all the child classes
     # all that we need to have a list with the same structure (list with strings inside)
@@ -98,7 +101,12 @@ class Publication:
                 os.mkdir(os.path.split(self.path_to_file_with_result)[0])
             for result in self.result_list:
                 self.insert_strings_into_file(result)
-        return len(self.result_list)
+            for dictionary in self.result_list_for_db:
+                for key, value in dictionary.items():
+                    if type(value) == str and key != 'type':
+                        dictionary[key] = case_modifying(value)
+
+        return len(self.result_list), self.result_list_for_db
 
 
 # child class for news
@@ -123,6 +131,12 @@ class News(Publication):
         self.result_list[self.number_of_publications].append(self.city)
         self.result_list[self.number_of_publications].append(current_date)
 
+        self.result_list_for_db.append({})
+        self.result_list_for_db[self.number_of_publications]['type'] = self.publication_type.replace(' ', '_')
+        self.result_list_for_db[self.number_of_publications]['text'] = self.text
+        self.result_list_for_db[self.number_of_publications]['city'] = self.city
+        self.result_list_for_db[self.number_of_publications]['date_of_news'] = current_date
+
 
 # child class for ad
 class PrivateAd(Publication):
@@ -145,8 +159,10 @@ class PrivateAd(Publication):
 
         # converting string to date format
         expiration_date = datetime.datetime.strptime(self.expiration_date_str, '%Y-%m-%d').date()
+
         # calculating days difference
-        days_left = (expiration_date - datetime.date.today()).days
+        current_date = datetime.date.today()
+        days_left = (expiration_date - current_date).days
 
         # checking if difference positive or not, message depends on this result
         if days_left >= 0:
@@ -158,6 +174,12 @@ class PrivateAd(Publication):
         self.result_list[self.number_of_publications].append(self.creating_first_string())
         self.result_list[self.number_of_publications].append(self.text)
         self.result_list[self.number_of_publications].append(second_string)
+
+        self.result_list_for_db.append({})
+        self.result_list_for_db[self.number_of_publications]['type'] = self.publication_type.replace(' ', '_')
+        self.result_list_for_db[self.number_of_publications]['text'] = self.text
+        self.result_list_for_db[self.number_of_publications]['date_of_ad'] = current_date
+        self.result_list_for_db[self.number_of_publications]['expiration_date'] = self.expiration_date_str
 
 
 # child class for sport result
@@ -200,6 +222,14 @@ class SportResult(Publication):
         self.result_list[self.number_of_publications].append(string2)
         self.result_list[self.number_of_publications].append(string3)
 
+        self.result_list_for_db.append({})
+        self.result_list_for_db[self.number_of_publications]['type'] = self.publication_type.replace(' ', '_')
+        self.result_list_for_db[self.number_of_publications]['kind_of_sport'] = self.kind_of_sport
+        self.result_list_for_db[self.number_of_publications]['participant1'] = self.participant1
+        self.result_list_for_db[self.number_of_publications]['participant2'] = self.participant2
+        self.result_list_for_db[self.number_of_publications]['game_result'] = self.game_result
+        self.result_list_for_db[self.number_of_publications]['winner'] = participants[result]
+
     def determining_the_winner(self):
         res1 = self.game_result.split('-')[0]
         res2 = self.game_result.split('-')[1]
@@ -215,7 +245,7 @@ class SportResult(Publication):
 class FillingFromText(Publication):
     def __init__(self):
         super().__init__()
-        self.publication_type = "Text information"
+        self.publication_type = "text information"
 
     def fulfil_the_content(self):
         path_for_searching_files = self.creating_path_to_file()
@@ -227,9 +257,16 @@ class FillingFromText(Publication):
                 self.result_list.append([])
                 file_path = os.path.join(path_for_searching_files, one_file)
                 self.result_list[counter].append(self.creating_first_string())
+
+                self.result_list_for_db.append({})
+                self.result_list_for_db[self.number_of_publications]['type'] = self.publication_type.replace(' ', '_')
+
+                lines = ''
                 with open(file_path, 'r') as f:
                     for line in f:
                         self.result_list[counter].append(line.replace('\n', ''))
+                        lines = lines + line.replace('\n', '')
+                    self.result_list_for_db[self.number_of_publications]['text'] = lines
                 counter += 1
                 print(f"Data from file {one_file} was successfully loaded to the result file, "
                       f"and {one_file} was removed")
@@ -290,6 +327,7 @@ class JsonPublication(News, PrivateAd, SportResult):
         # create local variable for the list with all the results
         # we will add information here only all the file was proceed correctly
         full_result = []
+        full_result_db = []
 
         path_for_searching_files = self.creating_path_to_file()
 
@@ -298,6 +336,7 @@ class JsonPublication(News, PrivateAd, SportResult):
             if one_file.endswith('.json'):
                 # if the json file was found redefine two self variables to the start values
                 self.result_list = []
+                self.result_list_for_db = []
                 self.number_of_publications = 0
 
                 # delete file has default value 1, it should be switched tp 0 if something goes wrong with the file
@@ -311,10 +350,12 @@ class JsonPublication(News, PrivateAd, SportResult):
                 delete_flag = self.adding_data_from_dictionary(json_data)
 
                 # if the delete_flag was not overwritten we can remove the file and add the results to the local
-                full_result = self.checking_delete_flag(delete_flag, file_path, one_file, full_result)
+                full_result, full_result_db = self.checking_delete_flag(delete_flag, file_path, one_file, full_result,
+                                                                        full_result_db)
 
         # after all the files will be checked redefine self.result_list variable from local variable full_result
         self.result_list = full_result
+        self.result_list_for_db = full_result_db
 
 
 class XmlPublication(JsonPublication):
@@ -359,6 +400,7 @@ class XmlPublication(JsonPublication):
 
     def fulfil_the_content(self):
         full_result = []
+        full_result_db = []
 
         path_for_searching_files = self.creating_path_to_file()
 
@@ -366,6 +408,7 @@ class XmlPublication(JsonPublication):
         for one_file in os.listdir(path_for_searching_files):
             if one_file.endswith('.xml'):
                 self.result_list = []
+                self.result_list_for_db = []
                 self.number_of_publications = 0
                 path_for_searching_files.split()[0]
                 file_path = os.path.join(path_for_searching_files, one_file)
@@ -378,7 +421,9 @@ class XmlPublication(JsonPublication):
                 else:
                     delete_flag = self.adding_data_from_xml(root)
 
-                full_result = self.checking_delete_flag(delete_flag, file_path, one_file, full_result)
+                full_result, full_result_db = self.checking_delete_flag(delete_flag, file_path, one_file, full_result,
+                                                                        full_result_db)
 
         # after all the files will be checked redefine self.result_list variable from local variable full_result
         self.result_list = full_result
+        self.result_list_for_db = full_result_db
