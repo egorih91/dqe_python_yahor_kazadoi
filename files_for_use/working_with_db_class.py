@@ -40,17 +40,19 @@ class WorkingWithDb:
         self.type_of_publication = result_dict.pop('type')
 
         # creating where-statement
-        where_statement = "1=1 and "
+        where_statement_list = []
         for column, value in result_dict.items():
 
             # exclude columns that have different values of dates
             # that depends on time of running the program
             if column not in ['date_of_news', 'date_of_ad']:
-                where_statement = where_statement + f"{column}='{value}' and "
+                where_statement_list.append(f"{column}='{value}'")
 
-        where_statement = where_statement[:-5]
+        where_statement = ''
+        if where_statement_list:
+            where_statement = "where " + ' and '.join(where_statement_list)
 
-        statement = f"select * from {self.type_of_publication} where {where_statement}"
+        statement = f"select * from {self.type_of_publication} {where_statement}"
 
         # print(statement)
         try:

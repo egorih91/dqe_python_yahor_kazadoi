@@ -211,10 +211,13 @@ class SportResult(Publication):
         result = self.determining_the_winner()
 
         # creating the row in dependency of the previous result
+        self.result_list_for_db.append({})
         if result == 3:
             string3 = "No winner revealed, draw"
+            self.result_list_for_db[self.number_of_publications]['winner'] = 'DRAW'
         else:
             string3 = f"{participants[result]} is WINNER! Congrats!"
+            self.result_list_for_db[self.number_of_publications]['winner'] = participants[result]
 
         self.result_list.append([])
         self.result_list[self.number_of_publications].append(self.creating_first_string())
@@ -222,13 +225,12 @@ class SportResult(Publication):
         self.result_list[self.number_of_publications].append(string2)
         self.result_list[self.number_of_publications].append(string3)
 
-        self.result_list_for_db.append({})
         self.result_list_for_db[self.number_of_publications]['type'] = self.publication_type.replace(' ', '_')
         self.result_list_for_db[self.number_of_publications]['kind_of_sport'] = self.kind_of_sport
         self.result_list_for_db[self.number_of_publications]['participant1'] = self.participant1
         self.result_list_for_db[self.number_of_publications]['participant2'] = self.participant2
         self.result_list_for_db[self.number_of_publications]['game_result'] = self.game_result
-        self.result_list_for_db[self.number_of_publications]['winner'] = participants[result]
+
 
     def determining_the_winner(self):
         res1 = self.game_result.split('-')[0]
@@ -404,7 +406,7 @@ class XmlPublication(JsonPublication):
 
         path_for_searching_files = self.creating_path_to_file()
 
-        # going through the directory and searching for the json files
+        # going through the directory and searching for the xml files
         for one_file in os.listdir(path_for_searching_files):
             if one_file.endswith('.xml'):
                 self.result_list = []
